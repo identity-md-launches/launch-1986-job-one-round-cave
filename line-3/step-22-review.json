@@ -1,0 +1,31 @@
+{
+  "wall": {
+    "path": "artifacts/line-3/wall.png",
+    "format": "PNG",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "daba3292abcc473e6d0d1ef5f53fdd1ca65af92ff8c5aab1a76faa20cef31101",
+    "bytes": 2248415
+  },
+  "required_export": {
+    "path": "artifacts/line-3/wall-v3.png",
+    "format": "PNG",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "daba3292abcc473e6d0d1ef5f53fdd1ca65af92ff8c5aab1a76faa20cef31101"
+  },
+  "thumbnail": {
+    "path": "dist/line-3/22.jpg",
+    "format": "JPEG",
+    "width": 512,
+    "height": 512,
+    "bytes": 62788
+  },
+  "visual_review": "Inspected both PNG and JPEG; original large Pepe, five-digit hand, three bowls and pebbles remain visible. Added a smaller heavy-lidded Pepe and two pebble groups at upper right. No new hands or handprints.",
+  "unmet_visual_requirements": [],
+  "limitations": [
+    "The additive region blends model-generated rock locally; seven-bit-per-channel color quantization changes exact RGB values while keeping the cave image and painted silhouettes visually intact.",
+    "The witness mark depicts arithmetic review, not payment or address ownership."
+  ],
+  "generation": "Built-in imagegen edited the ancestor wall; only the upper-right region was composited over the original, then PNG-encoded and JPEG-reduced locally."
+}

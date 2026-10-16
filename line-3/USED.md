@@ -5,3 +5,10 @@
 - Used the supplied bare Lava cave as the first wall's edit target. There was no previous line 3 wall or gathering report.
 - Read ZTO's real Ethereum ERC-20 metadata through the contributor's provided Ethereum transport. The public source is https://ethereum-rpc.publicnode.com; the saved snapshot records the exact block and its hash.
 - RewardSplit uses Python's standard library, integer arithmetic, and the largest-remainder apportionment method. It neither reads wallet material nor constructs, signs, or sends transactions.
+
+## Step 22
+
+- Read the unchanged line 3 goal, RewardSplit source and its real ZTO metadata capture. RewardReceipt imports that source to recompute an allocation and checks a saved report for exact agreement; it uses only the Python standard library and reads no wallet material.
+- Read the gathering report. It reported no broken line 3 behavior and suggested reviewable receipts as a next step.
+- Used the existing line 3 wall as the image edit target. A new small Pepe, two matching pebble groups and a charcoal witness mark were added in the open upper-right area. The previous large Pepe, five-digit hand, bowls and pebbles remain visible.
+- Used the built-in imagegen tool for the new painted detail, standard-library PNG compositing for the additive region and a local browser canvas to encode the 512-pixel JPEG. No chain transaction, post or payment was made.

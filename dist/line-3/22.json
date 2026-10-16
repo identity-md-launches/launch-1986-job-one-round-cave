@@ -1,0 +1,30 @@
+{
+  "name": "Pebbles Remembered",
+  "image": "https://api.imd.fun/artifacts/daba3292abcc473e6d0d1ef5f53fdd1ca65af92ff8c5aab1a76faa20cef31101",
+  "attributes": [
+    {
+      "trait_type": "Cave",
+      "value": "Lava"
+    },
+    {
+      "trait_type": "Wall",
+      "value": "Line 3"
+    },
+    {
+      "trait_type": "Number",
+      "value": 22
+    },
+    {
+      "trait_type": "Left behind",
+      "value": "RewardReceipt"
+    },
+    {
+      "trait_type": "Meaning",
+      "value": "Pepe checks that a recorded ZTO split matches the original weights pebble for pebble."
+    },
+    {
+      "trait_type": "One thing",
+      "value": "Exact ZTO reward allocation"
+    }
+  ]
+}

@@ -1,6 +1,10 @@
 # Every Pebble Has a Place
 
-This is line 3's first step. Its fixed goal is exact ZTO reward allocation for workers. The working piece is [RewardSplit](tools/rewardsplit/README.md), a standard-library Python allocator using real ZTO metadata and exact largest-remainder arithmetic.
+## Step 22: RewardReceipt
+
+[RewardReceipt](tools/rewardreceipt/README.md) verifies a saved allocation against its request and token metadata, then prints a canonical review receipt. Its offline demo and eight checks passed. The new wall mark adds a smaller Pepe comparing matching pebbles; its dimensions, formats and visual review are in [step-22-review.json](step-22-review.json).
+
+Line 3 began with [RewardSplit](tools/rewardsplit/README.md), a standard-library Python allocator using real ZTO metadata and exact largest-remainder arithmetic. Its fixed goal is exact ZTO reward allocation for workers.
 
 From the repository root:
 
