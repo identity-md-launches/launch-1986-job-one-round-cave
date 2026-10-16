@@ -1,0 +1,60 @@
+[
+  {
+    "command": [
+      "python3",
+      "-B",
+      "line-1/tools/replan/selftest.py"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout": "",
+    "stderr": "test_300_progress_snapshots (__main__.ReplanTests.test_300_progress_snapshots) ... ok\ntest_complete_graph_still_validated (__main__.ReplanTests.test_complete_graph_still_validated) ... ok\ntest_delayed_demo (__main__.ReplanTests.test_delayed_demo) ... ok\ntest_done_all_and_expired_deadline (__main__.ReplanTests.test_done_all_and_expired_deadline) ... ok\ntest_file_and_cli_validation (__main__.ReplanTests.test_file_and_cli_validation) ... ok\ntest_heuristic_miss_is_not_proof (__main__.ReplanTests.test_heuristic_miss_is_not_proof) ... ok\ntest_inconsistent_progress (__main__.ReplanTests.test_inconsistent_progress) ... ok\ntest_input_not_mutated (__main__.ReplanTests.test_input_not_mutated) ... ok\ntest_margin_on_remaining_work_only (__main__.ReplanTests.test_margin_on_remaining_work_only) ... ok\ntest_no_progress_matches_predecessor (__main__.ReplanTests.test_no_progress_matches_predecessor) ... ok\ntest_repeated_active_and_worker (__main__.ReplanTests.test_repeated_active_and_worker) ... ok\ntest_running_workers_are_pinned (__main__.ReplanTests.test_running_workers_are_pinned) ... ok\ntest_simultaneous_completions_release_all_dependencies (__main__.ReplanTests.test_simultaneous_completions_release_all_dependencies) ... ok\ntest_timestamp_precision_rejected (__main__.ReplanTests.test_timestamp_precision_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 0.118s\n\nOK\n"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "line-1/tools/workplan/workplan.py",
+      "--self-test"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout": "PASS: demo, deadline checks, invalid inputs, 150 seeded dependency graphs, determinism and resource constraints\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "line-1/tools/replan/replan.py",
+      "--demo",
+      "--workers",
+      "2",
+      "--budget",
+      "27"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout": "{\n  \"units\": \"minutes\",\n  \"elapsed_minutes\": 9,\n  \"workers\": 2,\n  \"budget\": 27.0,\n  \"remaining_budget\": 18.0,\n  \"margin_percent\": 0,\n  \"completed\": [\n    \"prepare-fixtures\",\n    \"read-brief\"\n  ],\n  \"schedule\": [\n    {\n      \"task\": \"implement\",\n      \"worker\": 1,\n      \"start\": 9,\n      \"finish\": 19.0,\n      \"state\": \"running\",\n      \"remaining_minutes\": 10.0\n    },\n    {\n      \"task\": \"verify\",\n      \"worker\": 1,\n      \"start\": 19.0,\n      \"finish\": 24.0,\n      \"state\": \"pending\",\n      \"remaining_minutes\": 5.0\n    },\n    {\n      \"task\": \"write-handoff\",\n      \"worker\": 1,\n      \"start\": 24.0,\n      \"finish\": 26.0,\n      \"state\": \"pending\",\n      \"remaining_minutes\": 2.0\n    }\n  ],\n  \"finish\": 26.0,\n  \"remaining_minutes\": 17.0,\n  \"lower_bound_remaining\": 17.0,\n  \"earliest_possible_finish\": 26.0,\n  \"critical_path\": [\n    \"implement\",\n    \"verify\",\n    \"write-handoff\"\n  ],\n  \"fits_budget\": true,\n  \"deadline_verdict\": \"fits\",\n  \"slack\": 1.0,\n  \"method\": \"nonpreemptive longest downstream first; running tasks pinned to their workers\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "line-1/tools/replan/replan.py",
+      "--input",
+      "line-1/tools/replan/example.json",
+      "--workers",
+      "2",
+      "--budget",
+      "27",
+      "--margin-percent",
+      "20"
+    ],
+    "exit_code": 2,
+    "expected_exit_code": 2,
+    "stdout": "{\n  \"units\": \"minutes\",\n  \"elapsed_minutes\": 9,\n  \"workers\": 2,\n  \"budget\": 27.0,\n  \"remaining_budget\": 18.0,\n  \"margin_percent\": 20.0,\n  \"completed\": [\n    \"prepare-fixtures\",\n    \"read-brief\"\n  ],\n  \"schedule\": [\n    {\n      \"task\": \"implement\",\n      \"worker\": 1,\n      \"start\": 9,\n      \"finish\": 21.0,\n      \"state\": \"running\",\n      \"remaining_minutes\": 12.0\n    },\n    {\n      \"task\": \"verify\",\n      \"worker\": 1,\n      \"start\": 21.0,\n      \"finish\": 27.0,\n      \"state\": \"pending\",\n      \"remaining_minutes\": 6.0\n    },\n    {\n      \"task\": \"write-handoff\",\n      \"worker\": 1,\n      \"start\": 27.0,\n      \"finish\": 29.4,\n      \"state\": \"pending\",\n      \"remaining_minutes\": 2.4\n    }\n  ],\n  \"finish\": 29.4,\n  \"remaining_minutes\": 20.4,\n  \"lower_bound_remaining\": 20.4,\n  \"earliest_possible_finish\": 29.4,\n  \"critical_path\": [\n    \"implement\",\n    \"verify\",\n    \"write-handoff\"\n  ],\n  \"fits_budget\": false,\n  \"deadline_verdict\": \"impossible_at_estimates\",\n  \"slack\": -2.3999999999999986,\n  \"method\": \"nonpreemptive longest downstream first; running tasks pinned to their workers\"\n}\n",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "number": 22,
+  "tool": "Replan",
+  "goal_unchanged": true,
+  "older_records_unchanged": true,
+  "wall": {
+    "path": "artifacts/line-1/wall-v3.png",
+    "canonical_path": "artifacts/line-1/wall.png",
+    "format": "PNG",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "bytes": 2859663,
+    "sha256": "1bd0669416d5325b8660dfc3553357caf92254a0f9a330fa5ea8a6a725df389d"
+  },
+  "preview": {
+    "path": "dist/line-1/22.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      512,
+      512
+    ],
+    "bytes": 79858,
+    "sha256": "381a9d408cf9e43d9acd46b0ec4083fe9af2b32558981e9c8c8cc31ee84a338d"
+  },
+  "preservation": {
+    "previous_sha256": "3623847bb360b29abd63873ebc6afdce2aea40e33500cb0bdb41490b1ae6675d",
+    "sha256": "1bd0669416d5325b8660dfc3553357caf92254a0f9a330fa5ea8a6a725df389d",
+    "width": 1254,
+    "height": 1254,
+    "changed_pixels": 43113,
+    "protected_pixels": 1529151,
+    "total_pixels": 1572516,
+    "png_bytes": 2859663,
+    "jpeg_bytes": 79858,
+    "jpeg_width": 512,
+    "jpeg_height": 512
+  },
+  "pixel_check": {
+    "source": "original tracked wall blob",
+    "protected_pixels": 1529151,
+    "changed_protected_pixels": 0
+  },
+  "visual_review": {
+    "method": "agent inspected full PNG and JPEG with view_image",
+    "pepe": "ancestral heavy-lidded wide-mouthed charcoal frog retained exactly",
+    "left_hand_digits": 5,
+    "right_hand_digits": 5,
+    "new_hands_or_stencils": 0,
+    "addition": "worn ochre snail, chalk stepping stones, dotted branch",
+    "rock_light_cracks_framing": "unchanged outside small bare-stone addition regions",
+    "letters_numbers_logos_watermarks_borders": "none observed",
+    "unmet_visual_requirements": []
+  },
+  "file_placement_conflict": "The brief both requires dist/line-1/22.jpg beside the record and prohibits images outside artifacts. Followed the explicit numbered JPEG path; this is the only new image outside artifacts.",
+  "checks": {
+    "replan_tests_passed": 14,
+    "random_progress_cases": 300,
+    "predecessor_random_graphs": 150,
+    "details": "line-1/check-results-22.json",
+    "all_expected_exit_codes_observed": true,
+    "local_observations_not_independent_certification": true
+  },
+  "limitations": [
+    "Task estimates and percentage margins are assumptions, not runtime guarantees.",
+    "List scheduling is deterministic but not always optimal.",
+    "No task execution, failure recovery, worker calendars, or transaction capabilities."
+  ]
+}
