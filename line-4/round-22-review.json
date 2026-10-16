@@ -1,0 +1,60 @@
+{
+  "wall": {
+    "path": "artifacts/line-4/wall-v3.png",
+    "alias": "artifacts/line-4/wall.png",
+    "format": "PNG",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "904b5bff99a2a1cb84904f4269154eefc95fddca9f08bc44e03c9469e24e7642",
+    "bytes": 2961421,
+    "storage": "wall.png is a relative symlink to the separately delivered wall-v3.png; PNG bytes are unchanged."
+  },
+  "preview": {
+    "path": "artifacts/line-4/22.jpg",
+    "beside_record": "dist/line-4/22.jpg",
+    "storage": "relative symlink beside record keeps image bytes under artifacts/",
+    "format": "JPEG",
+    "width": 512,
+    "height": 512,
+    "bytes": 79758
+  },
+  "visual_review": "Worker inspected rendered full wall and preview; no independent reviewer.",
+  "visible_hands": 2,
+  "digits_on_visible_hands": [
+    5,
+    5
+  ],
+  "new_hands": 0,
+  "hand_stencils": 0,
+  "preserved_features": [
+    "1254-square framing",
+    "recognizable original Pepe and both hands",
+    "both original connected-dot tablets",
+    "warm rough rock, cracks, cave roof and floor"
+  ],
+  "new_mark": "Two irregular red ochre strokes make a narrowing passage, beside three small charcoal stones and one larger stone.",
+  "unmet_visual_requirements": [],
+  "limitations": [
+    "Generative edit retains recognizable prior art and stone features, but exact preservation of every pixel is not asserted.",
+    "BoundCheck is conservative static analysis, not full schema implication or runtime compatibility proof."
+  ],
+  "generation": {
+    "tool": "installed image edit tool",
+    "prompt": "line-4/round-22-prompt.txt"
+  },
+  "checks": {
+    "boundcheck_tests": 11,
+    "prior_apidelta_tests": 44,
+    "demo_breaking": 1,
+    "demo_review": 1,
+    "real_capture_self_compare_operations": 5,
+    "real_capture_self_compare_findings": 0
+  },
+  "bundle_repair": {
+    "removed_duplicate_bytes": 2961421,
+    "reported_bundle_before_bytes": 11082130,
+    "estimated_bundle_after_bytes": 8120720,
+    "limit_bytes": 8388608,
+    "method": "Deduplicated continuing wall using a relative symlink; preserved required output, dimensions, digest, preview and source."
+  }
+}
