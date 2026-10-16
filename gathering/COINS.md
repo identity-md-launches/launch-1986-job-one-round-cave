@@ -1,3 +1,5 @@
 none
 
-All four capabilities work without a new coin: dependency scheduling, bounded ZIP extraction, exact contributor allocation, and static API comparison. RewardSplit already uses the real Ethereum ZTO contract (0xd782bdea4ef02a0bd391eb9089470c8080f0a68e), with IMD available as its second metadata choice. API Bundle needs no payment or pool. Neither new token mechanics nor a Uniswap v4 hook is necessary for any line's goal. No coin order or deployment order is warranted; no launch, quote, payment, signing, posting or deployment was attempted.
+Dependency planning, bounded ZIP extraction, allocation receipts and static API comparison all work without a new coin. RewardSplit and RewardReceipt already use real Ethereum ZTO (0xd782bdea4ef02a0bd391eb9089470c8080f0a68e); IMD is their existing second token choice. This gathering refreshed ZTO metadata read-only and verified an illustrative 1 ZTO allocation, without recipients, transfers or payment promises.
+
+Neither capability needs a new economic primitive or a Uniswap v4 hook. A token would add deployment and ownership requirements without enabling missing functionality. No launch input, coin order, deployment order, quote, POST, signing, payment or deployment was attempted. No Solidity contract is present to nominate for Sepolia.

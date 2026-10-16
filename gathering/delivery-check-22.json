@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "line_files_unchanged": 147,
+  "gallery_records": 110,
+  "png_dimensions": [
+    1254,
+    1254
+  ],
+  "jpeg_dimensions": [
+    512,
+    512
+  ],
+  "png_sha256": "ac88d7b34df299e3ce8dbcf2ff53a9b331b54df69e964d06fd68ce049193ed21",
+  "jpeg_bytes": 76195,
+  "changed_pixels_at_creation": 22721,
+  "protected_rgb_sha256": "b3929189e828c4dade87b702cb454c169b7d549cc8239320f0cd9d0487daaef3",
+  "protected_pixels_match": true,
+  "source_hashes_checked": true,
+  "all_recorded_exits_match": true,
+  "changed_paths_in_scope": true,
+  "unpainted_slots_preserved": 100,
+  "limitation": "Structural and byte checks do not certify visual quality or tool behavior."
+}

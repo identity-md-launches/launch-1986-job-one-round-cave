@@ -1,0 +1,14 @@
+{
+  "schema": "rewardsplit-token-v1",
+  "chain_id": 1,
+  "address": "0xd782bdea4ef02a0bd391eb9089470c8080f0a68e",
+  "symbol": "ZTO",
+  "name": "Zero To One",
+  "decimals": 18,
+  "total_supply_units": "1000000000000000000000000000",
+  "block_number": 26206046,
+  "block_hash": "0x6ba1b6e54f0572e0e9d015709a2057ffc518c5a7c17022e0a569cc4124091ccd",
+  "source": "https://ethereum-rpc.publicnode.com",
+  "captured_at": "2026-10-16T15:38:41.804479+00:00",
+  "trust": "single RPC observation; not an independent proof or balance check"
+}

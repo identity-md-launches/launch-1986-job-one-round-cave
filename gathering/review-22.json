@@ -1,0 +1,69 @@
+{
+  "number": 22,
+  "first_gathering": false,
+  "wall": {
+    "path": "artifacts/gathering/wall-v3.png",
+    "canonical_path": "artifacts/gathering/wall.png",
+    "format": "PNG",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "bytes": 3947878,
+    "sha256": "ac88d7b34df299e3ce8dbcf2ff53a9b331b54df69e964d06fd68ce049193ed21"
+  },
+  "preview": {
+    "path": "dist/gathering/22.jpg",
+    "format": "JPEG",
+    "dimensions": [
+      512,
+      512
+    ],
+    "bytes": 76195,
+    "sha256": "b3e024417ed4bfe2ad4c125dcad1dc807878651055439ce4c1a6c7c807b7c11c"
+  },
+  "preservation": {
+    "input_sha256": "62f3be7543124fd821ed261d83b8fdb1508076e1b223e99c8f0be7eb29129b91",
+    "output_sha256": "ac88d7b34df299e3ce8dbcf2ff53a9b331b54df69e964d06fd68ce049193ed21",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "changed_pixels": 22721,
+    "addition_bounds": [
+      500,
+      175,
+      720,
+      375
+    ],
+    "protected_pixels_unchanged": 1528516,
+    "changed_pixels_outside_addition_region": 0,
+    "ancestor_figure_and_marks": "All outside the bare-stone addition rectangle; preserved pixel for pixel.",
+    "protected_rgb_sha256": "b3929189e828c4dade87b702cb454c169b7d549cc8239320f0cd9d0487daaef3",
+    "protected_hash_order": "RGB bytes, row major, excluding rectangle [500,175,720,375]."
+  },
+  "method": "Installed imagegen tool generated isolated pigment. FFmpeg decoded bytes; standard-library Python composited only the new mark on bare rock, preserving the original PNG pixels outside that region. FFmpeg encoded the required JPEG. No media dependency was installed.",
+  "visual_review": {
+    "method": "Agent inspected inherited PNG, finished PNG and final JPEG with view_image.",
+    "ancestral_pepe": "Wide mouth, heavy-lidded eyes, face, body, basket and trails retained in their original pixels.",
+    "left_hand_digits": 5,
+    "right_hand_digits": 5,
+    "digit_description": "Four fingers and one thumb on each inherited hand; no added hands or handprints.",
+    "addition": "Small worn pair of flints bound by one red ochre cord and knot on bare stone above Pepe.",
+    "style": "Warm torchlit rock, charcoal, ochre and chalk; uneven sparse pigment with rock showing through.",
+    "prohibited_marks": "No letters, numbers, captions, signatures, logos, watermarks, borders, real people, political or hateful symbols observed.",
+    "framing": "1254-pixel square; rock, cracks, lighting and framing unchanged outside the small addition."
+  },
+  "unmet_visual_requirements": [],
+  "limitations": [
+    "Visual review is one worker observation, not independent approval.",
+    "The new flint mark is pale and has finer detail than the inherited burnt-stick figure.",
+    "Only pigment in the stated bare-rock rectangle is changed; no claim that painted rock pixels there remain identical."
+  ],
+  "checks": {
+    "line_unittest_cases": 116,
+    "shared_integration_cases": 17,
+    "all_expected_exits_observed": true,
+    "line_files_unchanged": "Checked against gathering/line-integrity-22.json."
+  }
+}

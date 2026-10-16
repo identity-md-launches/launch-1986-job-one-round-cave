@@ -1,0 +1,116 @@
+[
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "line-2/tools/safezip/safezip.py",
+      "inspect",
+      "test/scratch/gathering-trial-9khcnz6p/new.zip"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "stdout": "{\n  \"ok\": true,\n  \"mode\": \"inspect\",\n  \"entries\": [\n    {\n      \"path\": \"openapi.json\",\n      \"kind\": \"file\",\n      \"bytes\": 23132,\n      \"sha256\": \"be142840c010710cb2a5b9e5c73e71d8e79ec4054c15661699d60bfa627be96a\"\n    },\n    {\n      \"path\": \"notes.txt\",\n      \"kind\": \"file\",\n      \"bytes\": 54,\n      \"sha256\": \"954428461ba5014d9cb2b83c3fb487b4c49bccb08568f687f607b8d0280d0be5\"\n    }\n  ],\n  \"total_bytes\": 23186,\n  \"content_checked\": true,\n  \"archive_sha256\": \"ebad6714383e175088cb78b742fa039a6b7bf995f700634465a4722cd9f56b9c\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "line-2/tools/safezip/safezip.py",
+      "extract",
+      "test/scratch/gathering-trial-9khcnz6p/new.zip",
+      "test/scratch/gathering-trial-9khcnz6p/unpacked",
+      "--sha256",
+      "ebad6714383e175088cb78b742fa039a6b7bf995f700634465a4722cd9f56b9c"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "stdout": "{\n  \"ok\": true,\n  \"mode\": \"extract\",\n  \"entries\": [\n    {\n      \"path\": \"openapi.json\",\n      \"kind\": \"file\",\n      \"bytes\": 23132,\n      \"sha256\": \"be142840c010710cb2a5b9e5c73e71d8e79ec4054c15661699d60bfa627be96a\"\n    },\n    {\n      \"path\": \"notes.txt\",\n      \"kind\": \"file\",\n      \"bytes\": 54,\n      \"sha256\": \"954428461ba5014d9cb2b83c3fb487b4c49bccb08568f687f607b8d0280d0be5\"\n    }\n  ],\n  \"total_bytes\": 23186,\n  \"content_checked\": true,\n  \"archive_sha256\": \"ebad6714383e175088cb78b742fa039a6b7bf995f700634465a4722cd9f56b9c\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "line-4/tools/boundcheck/boundcheck.py",
+      "compare",
+      "shared/api_bundle/imd-openapi.json",
+      "gathering/imd-openapi-current.json"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "stdout": "{\n  \"schema\": \"apidelta-report-v1\",\n  \"perspective\": \"existing clients upgrading to the new description\",\n  \"status\": \"no_detected_breakage\",\n  \"counts\": {\n    \"breaking\": 0,\n    \"review\": 0,\n    \"info\": 0\n  },\n  \"operations_compared\": 5,\n  \"findings\": [],\n  \"limits\": \"Static conservative subset analysis, not a full OpenAPI validator or proof of runtime compatibility. Review findings are unresolved.\",\n  \"extension\": \"boundcheck-v1\",\n  \"old_sha256\": \"be142840c010710cb2a5b9e5c73e71d8e79ec4054c15661699d60bfa627be96a\",\n  \"new_sha256\": \"be142840c010710cb2a5b9e5c73e71d8e79ec4054c15661699d60bfa627be96a\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "shared/api_bundle/api_bundle.py",
+      "test/scratch/gathering-trial-9khcnz6p/old.zip",
+      "test/scratch/gathering-trial-9khcnz6p/new.zip",
+      "--old-sha256",
+      "ebad6714383e175088cb78b742fa039a6b7bf995f700634465a4722cd9f56b9c",
+      "--new-sha256",
+      "ebad6714383e175088cb78b742fa039a6b7bf995f700634465a4722cd9f56b9c"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "stdout": "{\n  \"schema\": \"apidelta-report-v1\",\n  \"perspective\": \"existing clients upgrading to the new description\",\n  \"status\": \"no_detected_breakage\",\n  \"counts\": {\n    \"breaking\": 0,\n    \"review\": 0,\n    \"info\": 0\n  },\n  \"operations_compared\": 5,\n  \"findings\": [],\n  \"limits\": \"Static conservative subset analysis, not a full OpenAPI validator or proof of runtime compatibility. Review findings are unresolved.\",\n  \"extension\": \"boundcheck-v1\",\n  \"bundle_inputs\": {\n    \"old\": {\n      \"archive_sha256\": \"ebad6714383e175088cb78b742fa039a6b7bf995f700634465a4722cd9f56b9c\",\n      \"approved_sha256_checked\": true,\n      \"member\": \"openapi.json\",\n      \"member_sha256\": \"be142840c010710cb2a5b9e5c73e71d8e79ec4054c15661699d60bfa627be96a\",\n      \"checked_files\": [\n        {\n          \"path\": \"openapi.json\",\n          \"bytes\": 23132,\n          \"sha256\": \"be142840c010710cb2a5b9e5c73e71d8e79ec4054c15661699d60bfa627be96a\"\n        },\n        {\n          \"path\": \"notes.txt\",\n          \"bytes\": 54,\n          \"sha256\": \"954428461ba5014d9cb2b83c3fb487b4c49bccb08568f687f607b8d0280d0be5\"\n        }\n      ],\n      \"all_payloads_crc_checked\": true\n    },\n    \"new\": {\n      \"archive_sha256\": \"ebad6714383e175088cb78b742fa039a6b7bf995f700634465a4722cd9f56b9c\",\n      \"approved_sha256_checked\": true,\n      \"member\": \"openapi.json\",\n      \"member_sha256\": \"be142840c010710cb2a5b9e5c73e71d8e79ec4054c15661699d60bfa627be96a\",\n      \"checked_files\": [\n        {\n          \"path\": \"openapi.json\",\n          \"bytes\": 23132,\n          \"sha256\": \"be142840c010710cb2a5b9e5c73e71d8e79ec4054c15661699d60bfa627be96a\"\n        },\n        {\n          \"path\": \"notes.txt\",\n          \"bytes\": 54,\n          \"sha256\": \"954428461ba5014d9cb2b83c3fb487b4c49bccb08568f687f607b8d0280d0be5\"\n        }\n      ],\n      \"all_payloads_crc_checked\": true\n    }\n  }\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "line-3/tools/rewardsplit/rewardsplit.py",
+      "allocate",
+      "--input",
+      "line-3/tools/rewardsplit/example.json",
+      "--metadata",
+      "gathering/zto-mainnet-22.json",
+      "--output",
+      "test/scratch/gathering-trial-9khcnz6p/allocation.json"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "line-3/tools/rewardreceipt/rewardreceipt.py",
+      "verify",
+      "--request",
+      "line-3/tools/rewardsplit/example.json",
+      "--metadata",
+      "gathering/zto-mainnet-22.json",
+      "--report",
+      "test/scratch/gathering-trial-9khcnz6p/allocation.json"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "stdout": "{\n  \"schema\": \"rewardreceipt-v1\",\n  \"result\": \"verified exact RewardSplit allocation\",\n  \"token\": {\n    \"chain_id\": 1,\n    \"address\": \"0xd782bdea4ef02a0bd391eb9089470c8080f0a68e\",\n    \"symbol\": \"ZTO\",\n    \"decimals\": 18,\n    \"block_number\": 26206046,\n    \"block_hash\": \"0x6ba1b6e54f0572e0e9d015709a2057ffc518c5a7c17022e0a569cc4124091ccd\"\n  },\n  \"budget_units\": \"1000000000000000000\",\n  \"contributors\": 3,\n  \"request_sha256\": \"2aab721988a38569c3ebc8a3beb62fe287fa4abde5e657d33022430c2f6d6314\",\n  \"metadata_sha256\": \"88b175f2ef078cee218607293b1e886924eb10600293e2992e33b7daeb2d0ad7\",\n  \"report_sha256\": \"fa849cd56acdc8b754a00057d77e35e50bb2bf89680b7cea16e52a1b3c80b373\",\n  \"scope\": \"offline arithmetic and input agreement only; no work, identity, balance, signature, or payment verified\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "shared/api_bundle/selftest.py"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "stdout": "",
+    "stderr": "test_approval_still_checks_other_member_crc (__main__.BundleTests.test_approval_still_checks_other_member_crc) ... ok\ntest_approved_archive_digests (__main__.BundleTests.test_approved_archive_digests) ... ok\ntest_boundcheck_on_real_api_in_zip (__main__.BundleTests.test_boundcheck_on_real_api_in_zip) ... ok\ntest_break_and_cli_exit (__main__.BundleTests.test_break_and_cli_exit) ... ok\ntest_cli_approved_bounds_and_wrong_digest (__main__.BundleTests.test_cli_approved_bounds_and_wrong_digest) ... ok\ntest_comparison_uses_approved_snapshot_after_replacement (__main__.BundleTests.test_comparison_uses_approved_snapshot_after_replacement) ... ok\ntest_crc_refused_even_when_unselected (__main__.BundleTests.test_crc_refused_even_when_unselected) ... ok\ntest_duplicate_and_case_collision_refused (__main__.BundleTests.test_duplicate_and_case_collision_refused) ... ok\ntest_json_duplicate_and_size_limits (__main__.BundleTests.test_json_duplicate_and_size_limits) ... ok\ntest_malformed_digest (__main__.BundleTests.test_malformed_digest) ... ok\ntest_missing_member_and_symlink (__main__.BundleTests.test_missing_member_and_symlink) ... ok\ntest_ratio_limit (__main__.BundleTests.test_ratio_limit) ... ok\ntest_real_imd_capture (__main__.BundleTests.test_real_imd_capture) ... ok\ntest_review_exit (__main__.BundleTests.test_review_exit) ... ok\ntest_unchanged_with_inert_executable (__main__.BundleTests.test_unchanged_with_inert_executable) ... ok\ntest_wrong_digest_rejected_before_parsing (__main__.BundleTests.test_wrong_digest_rejected_before_parsing) ... ok\ntest_zip_traversal_refused_even_when_unselected (__main__.BundleTests.test_zip_traversal_refused_even_when_unselected) ... ok\n\n----------------------------------------------------------------------\nRan 17 tests in 0.281s\n\nOK\n"
+  }
+]

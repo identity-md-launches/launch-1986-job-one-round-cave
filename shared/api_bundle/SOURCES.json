@@ -1,10 +1,20 @@
 {
   "vendor/safezip.py": {
     "source": "line-2/tools/safezip/safezip.py",
-    "sha256": "0b69249b15dac2c7218517a1edd8b1712b7c3bb7100fd567d6dac17e739682bc"
+    "source_sha256": "a45aaea318d8cf7e71f68d7a2be8ce53732f1841bc5b1f40c238d663033c78e3",
+    "sha256": "a45aaea318d8cf7e71f68d7a2be8ce53732f1841bc5b1f40c238d663033c78e3",
+    "adaptation": "Byte-identical snapshot."
   },
   "vendor/apidelta.py": {
     "source": "line-4/tools/apidelta/apidelta.py",
-    "sha256": "9331dfe89870e60d63da4653d108aeb6621474b662c63ab8cc30082fcdf0b589"
+    "source_sha256": "9331dfe89870e60d63da4653d108aeb6621474b662c63ab8cc30082fcdf0b589",
+    "sha256": "9331dfe89870e60d63da4653d108aeb6621474b662c63ab8cc30082fcdf0b589",
+    "adaptation": "Byte-identical snapshot."
+  },
+  "vendor/boundcheck.py": {
+    "source": "line-4/tools/boundcheck/boundcheck.py",
+    "source_sha256": "ad7fc5ccf92017fe2864f95be3cfbe73739afed08c784a4c828314083fc639e6",
+    "sha256": "3beda300b6333055258841c4c7db7d70be5151a80dcfbac3a31345b4713f4303",
+    "adaptation": "Sibling ApiDelta and capture paths adjusted for shared vendor layout only."
   }
 }

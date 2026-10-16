@@ -1,5 +1,6 @@
 """Offline integration tests; all disposable files live in test/scratch."""
 import copy
+import hashlib
 import io
 import json
 from pathlib import Path
@@ -7,6 +8,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 import zipfile
 
 import api_bundle as bundle
@@ -105,6 +107,86 @@ class BundleTests(unittest.TestCase):
         report = bundle.compare(a, a)
         self.assertEqual(report['operations_compared'], 5)
         self.assertEqual(report['findings'], [])
+
+    def test_approved_archive_digests(self):
+        a = self.archive('approved.zip')
+        digest = hashlib.sha256(a.read_bytes()).hexdigest()
+        report = bundle.compare(a, a, old_sha256=digest.upper(), new_sha256=digest)
+        self.assertTrue(report['bundle_inputs']['old']['approved_sha256_checked'])
+        self.assertTrue(report['bundle_inputs']['new']['approved_sha256_checked'])
+        self.assertFalse(bundle.compare(a, a)['bundle_inputs']['old']['approved_sha256_checked'])
+
+    def test_wrong_digest_rejected_before_parsing(self):
+        a = self.archive('wrong.zip')
+        digest = hashlib.sha256(a.read_bytes()).hexdigest()
+        # An approved pathname is not enough: a later byte replacement must fail.
+        self.archive('wrong.zip', extra=[('extra', b'changed')])
+        with mock.patch.object(bundle.zipfile, 'ZipFile') as parser:
+            with self.assertRaisesRegex(ValueError, 'differs from approved'):
+                bundle.read_bundle(a, expected_sha256=digest)
+            parser.assert_not_called()
+
+    def test_malformed_digest(self):
+        a = self.archive('malformed.zip')
+        for value in ('', 'g'*64, '0'*63, '0'*65, True, 12):
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, '64 hexadecimal'):
+                bundle.read_bundle(a, expected_sha256=value)
+
+    def test_approval_still_checks_other_member_crc(self):
+        a = self.archive('crc.zip', extra=[('unselected', b'corrupt-me')])
+        a.write_bytes(a.read_bytes().replace(b'corrupt-me', b'CORRUPT-ME'))
+        with self.assertRaises(zipfile.BadZipFile):
+            bundle.read_bundle(a, expected_sha256=hashlib.sha256(a.read_bytes()).hexdigest())
+
+    def test_comparison_uses_approved_snapshot_after_replacement(self):
+        a = self.archive('replace.zip')
+        digest = hashlib.sha256(a.read_bytes()).hexdigest()
+        zip_type = zipfile.ZipFile
+        replacement = io.BytesIO()
+        with zip_type(replacement, 'w') as output:
+            output.writestr('openapi.json', '{"openapi":"3.1.0","paths":{}}')
+
+        def replace_then_parse(snapshot):
+            a.write_bytes(replacement.getvalue())
+            return zip_type(snapshot)
+
+        with mock.patch.object(bundle.zipfile, 'ZipFile', side_effect=replace_then_parse):
+            document, inventory = bundle.read_bundle(a, expected_sha256=digest)
+        self.assertEqual(document, self.doc)
+        self.assertEqual(inventory['archive_sha256'], digest)
+        self.assertNotEqual(hashlib.sha256(a.read_bytes()).hexdigest(), digest)
+
+    def test_boundcheck_on_real_api_in_zip(self):
+        baseline = json.loads(Path(__file__).with_name('imd-openapi.json').read_bytes())
+        schema = baseline['paths']['/requests/quote']['post']['requestBody']['content']['application/json']['schema']
+        schema.setdefault('properties', {})['clientNote'] = {'type': 'string', 'maxLength': 160}
+        proposed = copy.deepcopy(baseline)
+        proposed['paths']['/requests/quote']['post']['requestBody']['content']['application/json']['schema']['properties']['clientNote']['maxLength'] = 80
+        old, new = self.archive('old.zip', baseline), self.archive('new.zip', proposed)
+        report = bundle.compare(old, new)
+        self.assertEqual(report['extension'], 'boundcheck-v1')
+        self.assertEqual(report['counts']['breaking'], 1)
+        self.assertEqual(report['counts']['review'], 1)
+        self.assertIn('size_bound_incompatible', [f['code'] for f in report['findings']])
+        # Relaxation retains the original unresolved review, rather than auto-accepting.
+        self.assertEqual(bundle.compare(new, old)['status'], 'review_required')
+        self.assertEqual(bundle.compare(old, old)['status'], 'no_detected_breakage')
+
+    def test_cli_approved_bounds_and_wrong_digest(self):
+        old_doc = copy.deepcopy(self.doc)
+        old_doc['paths']['/items']['get']['responses']['200']['content'] = {
+            'application/json': {'schema': {'type': 'number', 'maximum': 10}}}
+        new_doc = copy.deepcopy(old_doc)
+        new_doc['paths']['/items']['get']['responses']['200']['content']['application/json']['schema']['maximum'] = 20
+        a, b = self.archive('a.zip', old_doc), self.archive('b.zip', new_doc)
+        argv = [sys.executable, '-B', str(Path(bundle.__file__)), str(a), str(b),
+                '--old-sha256', hashlib.sha256(a.read_bytes()).hexdigest(), '--new-sha256']
+        result = subprocess.run(argv + [hashlib.sha256(b.read_bytes()).hexdigest()], capture_output=True, text=True, timeout=10)
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertEqual(json.loads(result.stdout)['counts']['breaking'], 1)
+        result = subprocess.run(argv + ['not-a-digest'], capture_output=True, text=True, timeout=10)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertFalse(json.loads(result.stdout)['ok'])
 
 
 if __name__ == '__main__':
