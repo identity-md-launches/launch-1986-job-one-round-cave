@@ -10,7 +10,7 @@ From the workspace root, this one command demonstrates the tool offline:
 python3 -B line-2/tools/safezip/selftest.py
 ```
 
-Tried here: **16 tests passed**. A normal archive was inspected, extracted and
+Tried here: **24 tests passed**. A normal archive was inspected, extracted and
 checked byte-for-byte; stored and deflated payloads worked. Tests rejected
 traversal and absolute paths, Windows paths/reserved names, non-NFC names,
 duplicates and case collisions, file/directory conflicts, symbolic links and
@@ -19,6 +19,36 @@ aggregate byte overflow, excess entries and compression bombs. CRC corruption,
 broken deflate and truncated archives failed; failed extractions left neither a
 published destination nor a staging directory. Existing output and symlink paths
 were refused. CLI success and error exit codes were checked.
+
+## Review an archive, then require the same bytes
+
+Every successful report now includes `archive_sha256`, the SHA-256 of the
+complete ZIP bytes, including metadata. After inspecting an archive and reviewing
+its inventory, keep that digest in your review record. To extract later, pass
+`--sha256` followed by that exact 64-character digest. The API equivalent is
+`process(archive_path, output, expected_sha256=approved_digest)`.
+
+A mismatch exits 2 before ZIP parsing or staging. Uppercase digest input is
+accepted; returned hashes are lowercase. This is optional for compatibility:
+without the flag, extraction still checks paths, limits and payloads but does
+not require prior approval. A digest binds review to bytes; it says nothing
+about who supplied those bytes or whether their contents are safe to execute.
+
+Both modes capture one bounded, in-memory archive snapshot before parsing it.
+The digest and payloads come from that same snapshot: replacing the source
+pathname afterwards cannot substitute another archive. The actual read limit
+also catches a source that grows after the initial stat check. This costs up to
+the archive byte limit in additional snapshot memory (32 MiB by default), plus
+Python's allocation and ZIP parser overhead; it is not a hard RSS limit. A
+concurrently modified source can yield a mixed snapshot; an approved digest
+rejects it unless it has the approved bytes. This does not remove the existing
+cooperative-workspace requirement for extraction paths.
+
+New regression checks cover approved extraction, malformed/wrong digests,
+rejection before ZIP parsing, replacement of the source pathname between capture
+and parsing, source growth after stat, exact archive-byte boundaries, CLI approval
+flow, and CRC failure even with a matching archive digest. All 16 original
+adversarial tests still pass alongside these eight additions.
 
 ## Use with your archive
 

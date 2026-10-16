@@ -2,6 +2,10 @@
 """Offline functional and adversarial checks, using only disposable workspace data."""
 from pathlib import Path
 import stat
+import hashlib
+import io
+import json
+from unittest import mock
 import struct
 import tempfile
 import unittest
@@ -164,6 +168,108 @@ class SafeZipTests(unittest.TestCase):
         self.archive.write_bytes(raw)
         with self.assertRaises(Rejected):
             process(self.archive)
+
+    def test_archive_digest_and_approved_extraction(self):
+        self.make([('ok', b'reviewed bytes')])
+        digest = hashlib.sha256(self.archive.read_bytes()).hexdigest()
+        report = process(self.archive)
+        self.assertEqual(report['archive_sha256'], digest)
+        result = process(self.archive, self.output, expected_sha256=digest.upper())
+        self.assertEqual(result['archive_sha256'], digest)
+        self.assertEqual((self.output / 'ok').read_bytes(), b'reviewed bytes')
+
+    def test_changed_archive_rejected_before_zip_parsing(self):
+        self.make([('ok', b'original')])
+        digest = process(self.archive)['archive_sha256']
+        self.make([('ok', b'replacement')])
+        with mock.patch('safezip.zipfile.ZipFile') as parser:
+            with self.assertRaisesRegex(Rejected, 'differs from approved'):
+                process(self.archive, self.output, expected_sha256=digest)
+            parser.assert_not_called()
+        self.assertFalse(self.output.exists())
+        self.assertFalse(list(self.root.glob('.safezip-*')))
+
+    def test_invalid_digest(self):
+        self.make([('ok', b'original')])
+        for digest in ('', '0' * 63, '0' * 65, 'g' * 64, ' ' + 'a' * 64, 42):
+            with self.subTest(digest=digest), self.assertRaises(Rejected):
+                process(self.archive, self.output, expected_sha256=digest)
+        self.assertFalse(self.output.exists())
+
+    def test_snapshot_resists_path_replacement(self):
+        self.make([('ok', b'approved')])
+        digest = hashlib.sha256(self.archive.read_bytes()).hexdigest()
+        original_zip = zipfile.ZipFile
+        replacement = io.BytesIO()
+        with original_zip(replacement, 'w') as archive:
+            archive.writestr('ok', b'changed')
+
+        def replace_path_then_parse(snapshot):
+            self.archive.unlink()
+            self.archive.write_bytes(replacement.getvalue())
+            return original_zip(snapshot)
+
+        with mock.patch('safezip.zipfile.ZipFile', side_effect=replace_path_then_parse):
+            result = process(self.archive, self.output, expected_sha256=digest)
+        self.assertEqual((self.output / 'ok').read_bytes(), b'approved')
+        self.assertEqual(result['archive_sha256'], digest)
+        self.assertNotEqual(hashlib.sha256(self.archive.read_bytes()).hexdigest(), digest)
+
+    def test_actual_input_size_checked_after_stat(self):
+        self.make([('ok', b'x')])
+        original_open = Path.open
+
+        def grow_before_open(path, *args, **kwargs):
+            if path == self.archive and args == ('rb',):
+                with original_open(path, 'ab') as writer:
+                    writer.write(b'X' * 1024)
+            return original_open(path, *args, **kwargs)
+
+        size = self.archive.stat().st_size
+        with mock.patch.object(Path, 'open', grow_before_open):
+            with self.assertRaisesRegex(Rejected, 'while reading'):
+                process(self.archive, self.output, archive_bytes=size)
+        self.assertFalse(self.output.exists())
+
+    def test_exact_archive_limit(self):
+        self.make([('ok', b'x')])
+        size = self.archive.stat().st_size
+        self.assertTrue(process(self.archive, archive_bytes=size)['ok'])
+        with self.assertRaises(Rejected):
+            process(self.archive, archive_bytes=size - 1)
+
+    def test_approved_digest_does_not_bypass_payload_checks(self):
+        self.make([('ok', b'broken')])
+        raw = bytearray(self.archive.read_bytes())
+        raw[raw.index(b'broken')] ^= 1
+        self.archive.write_bytes(raw)
+        digest = hashlib.sha256(raw).hexdigest()
+        with self.assertRaises(zipfile.BadZipFile):
+            process(self.archive, self.output, expected_sha256=digest)
+        self.assertFalse(self.output.exists())
+        self.assertFalse(list(self.root.glob('.safezip-*')))
+
+    def test_approval_cli(self):
+        import subprocess
+        self.make([('ok', b'reviewed')])
+        script = str(Path(__file__).with_name('safezip.py'))
+        inspected = subprocess.run(['python3', '-B', script, 'inspect', str(self.archive)],
+                                   capture_output=True, text=True)
+        self.assertEqual(inspected.returncode, 0, inspected.stderr)
+        digest = json.loads(inspected.stdout)['archive_sha256']
+        for wrong in ('0' * 64, 'not-a-digest'):
+            result = subprocess.run(['python3', '-B', script, 'extract', str(self.archive),
+                                     str(self.output), '--sha256', wrong],
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertFalse(json.loads(result.stdout)['ok'])
+            self.assertFalse(self.output.exists())
+        result = subprocess.run(['python3', '-B', script, 'extract', str(self.archive),
+                                 str(self.output), '--sha256', digest],
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout)['archive_sha256'], digest)
+        self.assertEqual((self.output / 'ok').read_bytes(), b'reviewed')
 
     def test_cli(self):
         import subprocess

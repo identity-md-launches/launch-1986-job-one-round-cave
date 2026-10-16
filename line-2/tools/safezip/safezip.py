@@ -2,6 +2,8 @@
 """Bounded ZIP inspection and staged extraction. Standard library only."""
 import argparse
 import hashlib
+import hmac
+import io
 import json
 import os
 from pathlib import Path
@@ -101,11 +103,16 @@ def inventory(archive, limits):
 
 
 def process(archive_path, output=None, *, entries=1000, file_bytes=16*1024*1024,
-            total_bytes=64*1024*1024, archive_bytes=32*1024*1024, ratio=200):
+            total_bytes=64*1024*1024, archive_bytes=32*1024*1024, ratio=200,
+            expected_sha256=None):
     limits = argparse.Namespace(entries=entries, file_bytes=file_bytes,
                                 total_bytes=total_bytes, ratio=ratio)
     if min(entries, file_bytes, total_bytes, archive_bytes, ratio) <= 0:
         raise Rejected('all limits must be positive')
+    if expected_sha256 is not None and (
+            not isinstance(expected_sha256, str)
+            or re.fullmatch(r'[0-9a-fA-F]{64}', expected_sha256) is None):
+        raise Rejected('expected SHA-256 must be exactly 64 hexadecimal characters')
     source = local_path(archive_path)
     if not source.is_file() or source.stat().st_size > archive_bytes:
         raise Rejected('archive missing, nonregular, or over archive byte limit')
@@ -117,7 +124,29 @@ def process(archive_path, output=None, *, entries=1000, file_bytes=16*1024*1024,
             raise Rejected('output parent must already exist')
     stage = None
     try:
-        with zipfile.ZipFile(source) as archive:
+        # Capture bounded bytes before parsing. Hashing and extraction must use
+        # the same snapshot, even if the source pathname is replaced afterwards.
+        snapshot = io.BytesIO()
+        archive_digest = hashlib.sha256()
+        captured = 0
+        with source.open('rb') as reader:
+            if not stat.S_ISREG(os.fstat(reader.fileno()).st_mode):
+                raise Rejected('archive must be a regular file')
+            while True:
+                chunk = reader.read(min(65536, archive_bytes - captured + 1))
+                if not chunk:
+                    break
+                captured += len(chunk)
+                if captured > archive_bytes:
+                    raise Rejected('archive byte limit exceeded while reading')
+                archive_digest.update(chunk)
+                snapshot.write(chunk)
+        archive_sha256 = archive_digest.hexdigest()
+        if expected_sha256 is not None and not hmac.compare_digest(
+                archive_sha256, expected_sha256.lower()):
+            raise Rejected('archive SHA-256 differs from approved digest')
+        snapshot.seek(0)
+        with snapshot, zipfile.ZipFile(snapshot) as archive:
             members, total = inventory(archive, limits)
             if target is not None:
                 stage = Path(tempfile.mkdtemp(prefix='.safezip-', dir=target.parent))
@@ -165,7 +194,7 @@ def process(archive_path, output=None, *, entries=1000, file_bytes=16*1024*1024,
                 stage = None
             return {'ok': True, 'mode': 'extract' if target else 'inspect',
                     'entries': records, 'total_bytes': total,
-                    'content_checked': True}
+                    'content_checked': True, 'archive_sha256': archive_sha256}
     finally:
         if stage is not None:
             shutil.rmtree(stage)
@@ -180,13 +209,15 @@ def main():
                           ('total-bytes', 64*1024*1024), ('archive-bytes', 32*1024*1024),
                           ('ratio', 200)]:
         parser.add_argument('--' + flag, type=int, default=default)
+    parser.add_argument('--sha256', help='require these exact approved archive bytes')
     args = parser.parse_args()
     if (args.command == 'extract') != (args.output is not None):
         parser.error('extract requires an output directory; inspect takes no output')
     try:
         result = process(args.archive, args.output, entries=args.entries,
                          file_bytes=args.file_bytes, total_bytes=args.total_bytes,
-                         archive_bytes=args.archive_bytes, ratio=args.ratio)
+                         archive_bytes=args.archive_bytes, ratio=args.ratio,
+                         expected_sha256=args.sha256)
     except (ValueError, OSError, zipfile.BadZipFile, NotImplementedError, RuntimeError, EOFError, zlib.error) as error:
         print(json.dumps({'ok': False, 'error': str(error)}, ensure_ascii=True))
         return 2
